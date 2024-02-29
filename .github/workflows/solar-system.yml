@@ -9,7 +9,7 @@ on:
 
 env:
   MONGO_URI: mongodb+srv://supercluster.d83jj.mongodb.net/superData
-  MONGO_USERNAME: superuser
+  MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
 
 jobs:
@@ -25,6 +25,12 @@ jobs:
           with:
             node-version: 20
     
+        - name: Cache NPM dependencies
+          uses: actions/cache@v3
+          with:
+            path: ~/.npm
+            key: '${{ runner.os }}-node-modules-${{ hashFiles(package-lock.json) }}
+
         - name: Install Dependencies
           run: npm install
     
@@ -52,7 +58,8 @@ jobs:
         - name: Install Dependencies
           run: npm install
 
-        - continue-on-error: true
+        - name: Run Code Coverage
+          continue-on-error: true
           run: npm run coverage
 
         - name: Upload code-coverage
