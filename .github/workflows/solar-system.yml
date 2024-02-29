@@ -18,7 +18,7 @@ jobs:
         runs-on: ubuntu-latest
 
         container: 
-          image: node:20
+          image: 'node:20'
 
         steps:
         - name: Checkout Repository
